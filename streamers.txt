@@ -1,0 +1,19 @@
+# Streamer, die GTA 6 zum Release (19.11.2026) streamen wollen.
+# Stand: 17.11.2026, laut Presseberichten. Plaene koennen sich aendern.
+#
+# Empfohlener Aufruf, damit nur GTA-6-Streams geclippt werden:
+#   python watch_streamers.py --match "gta ?(6|vi)"
+
+# --- Deutsch ---
+zarbex          # will ab Mittwoch aus Neuseeland streamen (frueherer Release dort)
+papaplatte      # streamt mit Zarbex aus Neuseeland
+
+# --- Englisch ---
+kaicenat        # Durchspiel-Marathon ab 18.11., 20 Uhr Ostkueste (Twitch + YouTube)
+yt:@ludwig      # will zum Release durchspielen, ohne zu schlafen
+lacy            # organisiert einen einwoechigen GTA-6-Marathon ...
+clix            # ... zusammen mit Clix,
+marlon          # Marlon,
+jasontheween    # JasonTheWeen
+stableronaldo   # und Stable Ronaldo
+darkviperau     # eigener Launch-Day-Stream, sehr GTA-lastiger Kanal

@@ -170,6 +170,7 @@ def check(
     first_run: int,
     dry_run: bool,
     extra: list[str],
+    match: str | None = None,
     lister: Callable[[dict, int], list[dict]] = list_vods,
     live_check: Callable[[dict], bool] = is_live,
     clipper: Callable[[str, Path, list[str]], int] = run_clipper,
@@ -199,6 +200,13 @@ def check(
             rec = state["vods"].get(v["id"])
             if rec and (rec["status"] in ("ok", "no_highlights", "seen")
                         or rec.get("attempts", 0) >= MAX_ATTEMPTS):
+                continue
+            if match and not re.search(match, v["title"], re.I):
+                # Anderes Spiel / Just Chatting: nicht clippen.
+                print(f"  uebersprungen (Titel passt nicht): {v['title'][:60]}")
+                if not dry_run:
+                    state["vods"][v["id"]] = {"channel": label, "title": v["title"],
+                                              "status": "seen", "at": now_iso()}
                 continue
             if first_time and i >= first_run:
                 # Beim ersten Lauf nicht das ganze Archiv nachholen.
@@ -255,6 +263,8 @@ def main(argv: list[str] | None = None) -> int:
                    help="So viele neueste VODs pro Kanal anschauen")
     p.add_argument("--first-run", type=int, default=1,
                    help="Beim ersten Lauf eines Kanals nur so viele VODs clippen")
+    p.add_argument("--match", metavar="REGEX",
+                   help='Nur VODs clippen, deren Titel passt, z.B. "gta ?(6|vi)"')
     p.add_argument("--dry-run", action="store_true",
                    help="Nur anzeigen, was neu ist; nichts clippen, Zustand nicht aendern")
     args = p.parse_args(argv)
@@ -269,7 +279,7 @@ def main(argv: list[str] | None = None) -> int:
     state = load_state(state_path)
     print(f"[{now_iso()}] pruefe {len(channels)} Kanaele", flush=True)
     s = check(channels, state, out=args.out, limit=args.limit, first_run=args.first_run,
-              dry_run=args.dry_run, extra=extra,
+              dry_run=args.dry_run, extra=extra, match=args.match,
               save=lambda: save_state(state_path, state))
     print(f"\nFertig: {s['new']} neu, {s['ok']} geclippt, {s['no_highlights']} ohne Highlight, "
           f"{s['failed']} fehlgeschlagen, {s['skipped_live']} gerade live, "

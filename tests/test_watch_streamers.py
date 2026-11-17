@@ -86,6 +86,17 @@ class TestCheck(unittest.TestCase):
         self.assertEqual(w.clipped.count("1"), 1)
         self.assertEqual(state["vods"]["1"]["status"], "no_highlights")
 
+    def test_title_filter(self):
+        state = {"channels": {"streamer": {}}, "vods": {}}
+        vods = [vod(3), vod(2), vod(1)]
+        vods[0]["title"] = "GTA 6 DAY 1 !!!"
+        vods[1]["title"] = "Just Chatting"
+        vods[2]["title"] = "gta vi weiter"
+        w = FakeWorld(vods)
+        run(w, state, match=r"gta ?(6|vi)")
+        self.assertEqual(w.clipped, ["1", "3"])
+        self.assertEqual(state["vods"]["2"]["status"], "seen")
+
     def test_dry_run_changes_nothing(self):
         state = {"channels": {}, "vods": {}}
         w = FakeWorld([vod(2), vod(1)])

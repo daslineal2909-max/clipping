@@ -93,6 +93,7 @@ python gta_clipper.py https://www.twitch.tv/videos/123456789 --chat-file chat.js
 
 Die Clips landen unter `clips/<kanal>/<video-id>/`. In `clips/state.json` steht, welche VODs schon erledigt sind. So wird nichts doppelt geclippt.
 
+- **Nur bestimmte Spiele:** Mit `--match` werden nur VODs geclippt, deren Titel passt, zum Beispiel `python watch_streamers.py --match "gta ?(6|vi)"`. Groß- und Kleinschreibung ist egal.
 - **Beim ersten Lauf eines Kanals** wird nur das neueste VOD geclippt, nicht das ganze Archiv. Das kannst du mit `--first-run 3` ändern.
 - **Läuft ein Twitch-Stream gerade**, wird das neueste VOD übersprungen, weil es noch wächst. Es kommt beim nächsten Lauf dran.
 - **Fehlgeschlagene VODs** werden bei den nächsten Läufen erneut versucht, höchstens 3-mal. Ein VOD ohne Highlight gilt als erledigt.
