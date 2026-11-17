@@ -62,6 +62,10 @@ HYPE_PATTERNS = [
     re.compile(r"\bL+\b"),       # "L" / "LLLL" als Fail-Reaktion (gross geschrieben)
 ]
 
+# Exit-Code, wenn der Chat geladen wurde, aber kein Moment ueber der Schwelle liegt.
+# Kein Fehler: watch_streamers.py versucht so ein VOD nicht erneut.
+EXIT_NO_HIGHLIGHTS = 3
+
 TOKEN_RE = re.compile(r"[\w']+", re.UNICODE)
 
 
@@ -422,7 +426,7 @@ def main(argv: list[str] | None = None) -> int:
     if not hl:
         print(f"Keine Highlights ueber Schwelle {args.threshold}. "
               f"Versuch --threshold {max(1.5, args.threshold - 0.5):.1f}", file=sys.stderr)
-        return 1
+        return EXIT_NO_HIGHLIGHTS
     attach_clip_ranges(hl, args.pre, args.post, args.window, duration)
     attach_top_messages(hl, msgs, args.window)
     hl.sort(key=lambda h: h.peak)       # chronologisch ausgeben

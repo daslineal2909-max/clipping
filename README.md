@@ -68,6 +68,52 @@ TwitchDownloaderCLI chatdownload --id 123456789 -o chat.json
 python gta_clipper.py https://www.twitch.tv/videos/123456789 --chat-file chat.json --dry-run
 ```
 
+## Täglicher Check: neue VODs automatisch clippen
+
+`watch_streamers.py` prüft die Kanäle deiner Streamer, findet VODs, die noch nicht bearbeitet wurden, und startet für jedes `gta_clipper.py`.
+
+1. Liste anlegen: Kopier `streamers.example.txt` nach `streamers.txt` und trag einen Kanal pro Zeile ein. Erlaubt sind Twitch-Namen, Twitch-URLs, `yt:@handle` und YouTube-Kanal-URLs.
+2. Testen, ohne etwas zu clippen:
+
+   ```bash
+   python watch_streamers.py --dry-run
+   ```
+
+3. Echt laufen lassen:
+
+   ```bash
+   python watch_streamers.py
+   ```
+
+   Optionen für den Clipper hängst du nach `--` an:
+
+   ```bash
+   python watch_streamers.py -- --top 5 --threshold 2.5
+   ```
+
+Die Clips landen unter `clips/<kanal>/<video-id>/`. In `clips/state.json` steht, welche VODs schon erledigt sind. So wird nichts doppelt geclippt.
+
+- **Beim ersten Lauf eines Kanals** wird nur das neueste VOD geclippt, nicht das ganze Archiv. Das kannst du mit `--first-run 3` ändern.
+- **Läuft ein Twitch-Stream gerade**, wird das neueste VOD übersprungen, weil es noch wächst. Es kommt beim nächsten Lauf dran.
+- **Fehlgeschlagene VODs** werden bei den nächsten Läufen erneut versucht, höchstens 3-mal. Ein VOD ohne Highlight gilt als erledigt.
+- **Kanal nicht erreichbar:** Die anderen Kanäle werden trotzdem geprüft. Das Skript endet dann mit Exit-Code 1, damit du es im Log siehst.
+
+### Jeden Tag automatisch starten
+
+Der Rechner muss zu der Zeit an sein. Am besten passt ein Zeitpunkt am Vormittag, dann sind die Streams vom Vorabend fertig.
+
+**Linux/macOS (cron):** Öffne mit `crontab -e` deine Crontab und füge diese Zeile ein. Den Pfad passt du an:
+
+```
+0 10 * * * cd /pfad/zu/clipping && python3 watch_streamers.py >> clips/watch.log 2>&1
+```
+
+**Windows (Aufgabenplanung):** In der Eingabeaufforderung, Pfad anpassen:
+
+```bat
+schtasks /Create /SC DAILY /ST 10:00 /TN "GTA Clipper" /TR "cmd /c cd /d C:\pfad\zu\clipping && python watch_streamers.py >> clips\watch.log 2>&1"
+```
+
 ## Weiter mit OpenShorts
 
 1. **Installieren:** Du brauchst Docker und mindestens 8 GB RAM.

@@ -1,0 +1,10 @@
+# Ein Kanal pro Zeile. Kopier diese Datei nach streamers.txt und trag deine Streamer ein.
+# Erlaubt sind:
+#   Twitch-Name                 beispielstreamer
+#   Twitch-URL                  https://www.twitch.tv/beispielstreamer
+#   YouTube-Handle              yt:@handle
+#   YouTube-Kanal-URL           https://www.youtube.com/@handle
+# Alles nach # wird ignoriert.
+
+beispielstreamer
+# yt:@BeispielKanal
